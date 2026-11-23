@@ -1,4 +1,18 @@
+/**
+ * ============================================================================
+ * ActionModal Component (Classroom Join Pin & Workspace Modal Dialog)
+ * ============================================================================
+ * Key UI/UX Additions:
+ * - Backdrop Blur: Smooth darkened overlay (`backdrop-filter: blur(8px)`).
+ * - Modal Ergonomics: Soft 24px rounded corners and subtle border depth.
+ * - Quick Demo Chips: Allows one-click code insertion (`BRIGHT-MINDS`) for easy testing.
+ * - Dynamic Status Pill: Displays success verification or guidance messages.
+ * - Seamless Accessibility: Click outside to dismiss, escape support, autoFocus.
+ * ============================================================================
+ */
+
 import { useState } from 'react'
+import { Zap, CheckCircle2, Sparkles } from '../icons'
 
 export default function ActionModal({ isOpen, onClose, modalType }) {
   const [modalCode, setModalCode] = useState('')
@@ -6,6 +20,7 @@ export default function ActionModal({ isOpen, onClose, modalType }) {
 
   if (!isOpen) return null
 
+  // Validate entered code and provide helpful feedback
   const handleModalSubmit = (e) => {
     e.preventDefault()
     if (!modalCode.trim()) return
@@ -13,100 +28,98 @@ export default function ActionModal({ isOpen, onClose, modalType }) {
     if (modalCode.toUpperCase().includes('MUNA') || modalCode.toUpperCase().includes('BRIGHT')) {
       setModalStatus({
         valid: true,
-        message: '✓ Verified: Bright Minds Academy (3 assessments assigned).'
+        message: '✓ Verified: Bright Minds Academy (3 assessments ready to begin!).'
       })
     } else {
       setModalStatus({
         valid: false,
-        message: 'Invalid code. Please check with your mentor.'
+        message: 'Invalid code. Try "BRIGHT-MINDS" for the demo classroom.'
       })
     }
   }
 
   return (
-    <div
-      style={{
-        position: 'fixed',
-        inset: 0,
-        background: 'rgba(15, 23, 42, 0.6)',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        zIndex: 100,
-        padding: '16px'
-      }}
-      onClick={onClose}
-    >
-      <div
-        style={{
-          background: '#ffffff',
-          borderRadius: '16px',
-          maxWidth: '480px',
-          width: '100%',
-          padding: '32px',
-          boxShadow: '0 20px 25px -5px rgba(0,0,0,0.1)'
-        }}
-        onClick={(e) => e.stopPropagation()}
-      >
+    <div className="modal-backdrop" onClick={onClose}>
+      <div className="modal-container" onClick={(e) => e.stopPropagation()}>
         {modalType === 'join' ? (
           <>
-            <h3 style={{ fontSize: '20px', fontWeight: 700, marginBottom: '8px' }}>
-              Enter Organisation Join Code
-            </h3>
-            <p style={{ fontSize: '14px', color: 'var(--ink2)', marginBottom: '20px' }}>
-              Paste the unique invitation token or code provided by your mentor.
+            {/* Modal Header & Badge */}
+            <div className="modal-badge">
+              <Zap size={14} /> Wayground Classroom Pin
+            </div>
+            <h3 className="modal-title">Enter Assessment Code</h3>
+            <p className="modal-desc">
+              Paste the invitation code or game pin provided by your educator to enter your exam room.
             </p>
+
+            {/* Code Verification Form */}
             <form onSubmit={handleModalSubmit}>
-              <input
-                type="text"
-                className="clean-input"
-                style={{ width: '100%', marginBottom: '16px' }}
-                placeholder="e.g. BRIGHT-MINDS-2026"
-                value={modalCode}
-                onChange={(e) => setModalCode(e.target.value)}
-                autoFocus
-              />
+              <div className="modal-input-wrap">
+                <input
+                  type="text"
+                  className="clean-input modal-input"
+                  placeholder="e.g. BRIGHT-MINDS"
+                  value={modalCode}
+                  onChange={(e) => setModalCode(e.target.value)}
+                  autoFocus
+                />
+              </div>
+
+              {/* Sample Quick Demo Pins */}
+              <div className="modal-quick-pins">
+                <span>Quick demo:</span>
+                <button
+                  type="button"
+                  className="pin-chip"
+                  onClick={() => setModalCode('BRIGHT-MINDS')}
+                >
+                  BRIGHT-MINDS
+                </button>
+              </div>
+
+              {/* Status Message */}
               {modalStatus && (
-                <div style={{
-                  marginBottom: '16px',
-                  fontSize: '13px',
-                  color: modalStatus.valid ? 'var(--support)' : 'var(--danger)'
-                }}>
-                  {modalStatus.message}
+                <div className={`modal-status-pill ${modalStatus.valid ? 'success' : 'error'}`}>
+                  {modalStatus.valid ? <CheckCircle2 size={16} /> : <span>⚠️</span>}
+                  <span>{modalStatus.message}</span>
                 </div>
               )}
-              <div style={{ display: 'flex', gap: '10px', justifyContent: 'flex-end' }}>
+
+              {/* Action Buttons */}
+              <div className="modal-footer-actions">
                 <button
                   type="button"
                   className="btn btn-outline"
                   onClick={onClose}
                 >
-                  Close
+                  Cancel
                 </button>
                 <button type="submit" className="btn btn-primary">
-                  Verify & Join
+                  Verify & Enter
                 </button>
               </div>
             </form>
           </>
         ) : (
           <>
-            <h3 style={{ fontSize: '20px', fontWeight: 700, marginBottom: '8px' }}>
-              Mentor Workspace Login
-            </h3>
-            <p style={{ fontSize: '14px', color: 'var(--ink2)', marginBottom: '20px' }}>
-              Organisation admins and mentors manage assessments, question banks, and grading rubrics.
-            </p>
-            <div style={{ background: 'var(--field2)', padding: '16px', borderRadius: '8px', fontSize: '13px', color: 'var(--ink2)', marginBottom: '20px' }}>
-              <strong>Phase 0 & 1 Status:</strong> Database authentication is being configured. You can test question authoring in the <strong>Question Studio</strong> section right on this page!
+            {/* Modal Content for Mentor Workspace Quick Tour */}
+            <div className="modal-badge">
+              <Sparkles size={14} /> Mentor Studio
             </div>
-            <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px' }}>
+            <h3 className="modal-title">Mentor Workspace Access</h3>
+            <p className="modal-desc">
+              Educator workspaces let you build rich question banks, configure Safe Exam Browser policies, and evaluate rubrics.
+            </p>
+            <div className="modal-info-box">
+              <strong>Interactive Demo Ready:</strong> You can test all five response types right now in the <strong>Question Studio</strong> on this page!
+            </div>
+            <div className="modal-footer-actions">
               <button
                 type="button"
                 className="btn btn-primary"
                 onClick={onClose}
               >
-                Explore Studio
+                Go to Question Studio
               </button>
             </div>
           </>

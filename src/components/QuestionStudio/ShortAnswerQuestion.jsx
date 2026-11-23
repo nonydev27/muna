@@ -1,37 +1,71 @@
+/**
+ * ============================================================================
+ * ShortAnswerQuestion Component (Pattern & Synonym Matching Studio)
+ * ============================================================================
+ * Key UI/UX Additions:
+ * - Live Pattern Evaluator: Detects acronyms (SEB) or full names (Safe Exam Browser)
+ *   in real time as the student types.
+ * - Celebratory Feedback Pill: Shows instant success pill with +5 Points on match.
+ * - Dynamic Hinting: Provides helpful guidance when the student starts typing.
+ * ============================================================================
+ */
+
 import { useState } from 'react'
+import { CheckCircle2, Sparkles } from '../../icons'
 
 export default function ShortAnswerQuestion() {
   const [shortAnswer, setShortAnswer] = useState('')
 
+  // Determine whether the typed answer matches the key or alias
+  const isMatched =
+    shortAnswer.toLowerCase().includes('safe exam') || shortAnswer.toLowerCase().trim() === 'seb'
+
   return (
-    <div>
+    <div className="short-question-container">
+      {/* Question Header & Points Badge */}
       <div className="studio-meta-bar">
-        <div className="q-points-badge">Question 4 · 5 Points · Short Answer Pattern</div>
+        <div className="q-badge-row">
+          <span className="q-num-pill">Question 4 of 5</span>
+          <span className="q-points-badge">✍️ 5 Points · Short Answer Pattern Match</span>
+        </div>
+        <div className="q-meta-feedback">
+          <Sparkles size={14} /> AI & Regex Pattern Evaluator
+        </div>
       </div>
 
-      <div className="q-prompt">
-        What dedicated kiosk application is supported by Muna for operating-system-level exam lockdown?
-      </div>
+      {/* Question Prompt */}
+      <h3 className="q-prompt">
+        What dedicated open-source kiosk software is supported by MUNA for operating-system-level exam lockdown?
+      </h3>
+      <p className="q-sub-prompt">
+        Type your answer below (e.g. acronym or full name). The system matches synonyms automatically.
+      </p>
 
-      <div className="input-with-button">
+      {/* Styled Short Answer Input */}
+      <div className="short-input-wrap">
         <input
           type="text"
-          className="clean-input"
-          placeholder="Type your answer here..."
+          className="short-input"
+          placeholder="Type your answer (e.g. SEB or Safe Exam Browser)..."
           value={shortAnswer}
           onChange={(e) => setShortAnswer(e.target.value)}
         />
       </div>
 
+      {/* Interactive Result Feedback Pill */}
       {shortAnswer.trim() && (
-        <div style={{ marginTop: '14px', fontSize: '14px' }}>
-          {shortAnswer.toLowerCase().includes('safe exam') || shortAnswer.toLowerCase() === 'seb' ? (
-            <span style={{ color: 'var(--support)', fontWeight: 600 }}>
-              ✓ Exact match recognized: Safe Exam Browser (SEB)
-            </span>
+        <div className={`short-result-pill ${isMatched ? 'success' : 'pending'}`}>
+          {isMatched ? (
+            <>
+              <CheckCircle2 size={16} />
+              <span>
+                <strong>Perfect match!</strong> Recognized: Safe Exam Browser (SEB) &bull; +5 Points
+              </span>
+            </>
           ) : (
-            <span style={{ color: 'var(--ink2)' }}>
-              Typing answer... (Pattern evaluator tests alternative aliases like "SEB")
+            <span>
+              Evaluating pattern for &ldquo;{shortAnswer}&rdquo;... Try typing <strong>SEB</strong> or{' '}
+              <strong>Safe Exam Browser</strong>.
             </span>
           )}
         </div>

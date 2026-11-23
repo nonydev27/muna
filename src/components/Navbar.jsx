@@ -1,36 +1,58 @@
-import { ShieldCheck } from '../icons'
+/**
+ * ============================================================================
+ * Navbar Component (Wayground EdTech Style)
+ * ============================================================================
+ * Features:
+ * - Brand identity with vibrant purple gradient icon and modern typography.
+ * - Sticky glassmorphic backdrop for smooth scrolling.
+ * - Dedicated "Enter Code" button with 3D tactile press styling, allowing students
+ *   to quickly access an assessment from anywhere on the page.
+ * - Responsive action buttons for Login and Signup.
+ * ============================================================================
+ */
+
+import { Sparkles, Zap } from '../icons'
 
 export default function Navbar({ onOpenModal }) {
   return (
     <header className="navbar">
       <div className="content-wrap nav-content">
-        <div className="brand-group">
+        {/* Brand Group with Sparkles Logo & Platform Tagline */}
+        <a href="/" className="brand-group" aria-label="Muna Learning Home">
           <div className="brand-icon-box">
-            <ShieldCheck size={22} />
+            <Sparkles size={22} />
           </div>
           <div>
             <div className="brand-title">MUNA</div>
-            <div className="brand-tag">Assessment Platform</div>
+            <div className="brand-tag">Interactive Learning & Assessment</div>
           </div>
-        </div>
+        </a>
 
+        {/* Primary Desktop Navigation Links */}
         <nav className="nav-links">
-          <a href="#features" className="nav-link">Features</a>
-          <a href="#studio" className="nav-link">Question Studio</a>
-          <a href="#security" className="nav-link">Security Model</a>
-          <a href="#workspaces" className="nav-link">Workspaces</a>
+          <a href="#studio" className="nav-link">Interactive Studio</a>
+          <a href="#workspaces" className="nav-link">For Educators & Students</a>
+          <a href="#security" className="nav-link">Assessment Integrity</a>
+          <a href="#join" className="nav-link">Join Code</a>
         </nav>
 
+        {/* Top-Right Action Controls */}
         <div className="nav-actions">
-          <a className="btn btn-outline" href="/login">Log in</a>
+          {/* Wayground-style quick PIN trigger button */}
           <button
             type="button"
-            className="btn btn-outline"
+            className="btn btn-code-badge"
             onClick={() => onOpenModal('join')}
+            title="Enter classroom pin or invite code"
           >
-            Enter Code
+            <Zap size={15} />
+            <span>Enter Code</span>
           </button>
-          <a className="btn btn-primary" href="/signup">Get started</a>
+          
+          <a className="btn btn-outline" href="/login">Log in</a>
+          <a className="btn btn-primary" href="/signup">
+            Sign up free
+          </a>
         </div>
       </div>
     </header>

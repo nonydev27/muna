@@ -1,34 +1,87 @@
+/**
+ * ============================================================================
+ * MUNA — Wayground-Inspired EdTech Design Tokens
+ * ============================================================================
+ * This stylesheet establishes the visual foundation inspired by Wayground (Quizizz):
+ * - Primary Theme: Vibrant Violet/Aubergine with soft lavender surfaces
+ * - Gamified Accents: Coral Red (A), Sky Cyan (B), Amber Gold (C), Mint Green (D)
+ * - Ergonomics: Friendly rounded radii, tactile 3D button depths, and soft shadows
+ * ============================================================================
+ */
+
 :root {
-  --field: #F8FAFC;
-  --field2: #F1F5F9;
+  /* Surface & Field: Soft lavender-tinted neutrals instead of cold greys */
+  --field: #F7F5FC;
+  --field2: #F0EDF9;
   --surface: #FFFFFF;
-  --ink: #0F172A;
-  --ink2: #475569;
-  --ink-muted: #94A3B8;
-  --rule: #E2E8F0;
-  --rule-strong: #CBD5E1;
-  --accent: #0F5C8C;
-  --accent-hover: #0B486F;
-  --accent-light: rgba(15, 92, 140, 0.08);
-  --accent-border: rgba(15, 92, 140, 0.25);
-  --accent2: #D2601A;
-  --accent2-light: rgba(210, 96, 26, 0.08);
-  --support: #1B6B4B;
-  --support-light: rgba(27, 107, 75, 0.08);
-  --danger: #DC2626;
-  --danger-light: rgba(220, 38, 38, 0.08);
+  --surface-alt: #FBFAFE;
   
+  /* Text & Typography Contrast */
+  --ink: #190F2D;
+  --ink2: #4E4366;
+  --ink-muted: #8F87A1;
+  --rule: #EAE5F5;
+  --rule-strong: #D6CCE8;
+
+  /* Wayground Signature Purple & 3D button press depth */
+  --accent: #7025E6;
+  --accent-hover: #5E1CC5;
+  --accent-active: #4F14A8;
+  --accent-light: #F2EBFF;
+  --accent-border: #D8C2FA;
+  --accent-shadow: rgba(112, 37, 230, 0.22);
+  --accent-3d: #4F17A6;
+
+  /* Wayground 4-Color Answer & Gamification Tokens */
+  /* Option A / High Energy */
+  --coral: #EF4444;
+  --coral-light: #FEF2F2;
+  --coral-border: #FECACA;
+  --coral-shadow: #DC2626;
+
+  /* Option C / XP Points / Game Pins */
+  --amber: #F59E0B;
+  --amber-light: #FFFBEB;
+  --amber-border: #FDE68A;
+  --amber-shadow: #D97706;
+
+  /* Option D / Success States / Autosave Sync */
+  --mint: #10B981;
+  --mint-light: #ECFDF5;
+  --mint-border: #A7F3D0;
+  --mint-shadow: #059669;
+
+  /* Option B / Canvas Tools / High-Stakes SEB */
+  --sky: #0EA5E9;
+  --sky-light: #F0F9FF;
+  --sky-border: #BAE6FD;
+  --sky-shadow: #0284C7;
+
+  /* Backward Compatibility Aliases for Legacy CSS */
+  --accent2: var(--coral);
+  --accent2-light: var(--coral-light);
+  --support: var(--mint);
+  --support-light: var(--mint-light);
+  --danger: #EF4444;
+  --danger-light: rgba(239, 68, 68, 0.08);
+
+  /* Typography: Geometric, approachable sans-serif */
   --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   --font-mono: 'JetBrains Mono', ui-monospace, Menlo, Consolas, monospace;
-  
-  --radius-sm: 6px;
-  --radius-md: 10px;
-  --radius-lg: 16px;
+
+  /* Radii - Soft, friendly, and approachable curves */
+  --radius-xs: 6px;
+  --radius-sm: 10px;
+  --radius-md: 14px;
+  --radius-lg: 20px;
+  --radius-xl: 28px;
   --radius-full: 9999px;
-  
-  --shadow-sm: 0 1px 2px 0 rgba(15, 23, 42, 0.05);
-  --shadow-md: 0 4px 6px -1px rgba(15, 23, 42, 0.07), 0 2px 4px -2px rgba(15, 23, 42, 0.05);
-  --shadow-lg: 0 10px 15px -3px rgba(15, 23, 42, 0.08), 0 4px 6px -4px rgba(15, 23, 42, 0.04);
+
+  /* Tactile Shadows & Depth Layers */
+  --shadow-sm: 0 1px 3px rgba(25, 15, 45, 0.06);
+  --shadow-md: 0 4px 12px rgba(25, 15, 45, 0.07), 0 1px 3px rgba(25, 15, 45, 0.04);
+  --shadow-lg: 0 12px 28px -6px rgba(112, 37, 230, 0.12), 0 4px 12px -2px rgba(25, 15, 45, 0.05);
+  --shadow-hover: 0 16px 32px -8px rgba(112, 37, 230, 0.18), 0 6px 14px -3px rgba(25, 15, 45, 0.08);
 }
 
 * {
@@ -104,15 +157,15 @@ input, textarea, select {
 }
 
 .shimmer-block {
-  background: linear-gradient(100deg, #e8eef3 20%, #f8fafc 38%, #e8eef3 56%);
+  background: linear-gradient(100deg, #ede8f8 20%, #ffffff 38%, #ede8f8 56%);
   background-size: 220% 100%;
   animation: shimmer 1.4s ease-in-out infinite;
 }
 
 .stream-brand {
-  width: 44px;
-  height: 44px;
-  border-radius: 12px;
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
 }
 
 .stream-title {
@@ -149,6 +202,6 @@ input, textarea, select {
 @media (prefers-reduced-motion: reduce) {
   .shimmer-block {
     animation: none;
-    background: #e8eef3;
+    background: #ede8f8;
   }
 }

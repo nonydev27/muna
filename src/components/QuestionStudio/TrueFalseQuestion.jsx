@@ -1,46 +1,90 @@
+/**
+ * ============================================================================
+ * TrueFalseQuestion Component (Wayground Tactile Binary Decision Cards)
+ * ============================================================================
+ * Key UI/UX Additions:
+ * - Two Large Visual Cards: Replaces standard radios with distinct colorful cards:
+ *   - True: Sky Blue (▲)
+ *   - False: Coral Red (◆)
+ * - 3D Press Interaction: Both cards feature tactile bottom elevation and responsive active states.
+ * - Explanatory Feedback Banner: Gives instantaneous educational context explaining
+ *   why SEB is an OS-level software rather than a browser extension.
+ * ============================================================================
+ */
+
 import { useState } from 'react'
+import { CheckCircle2, Trophy } from '../../icons'
 
 export default function TrueFalseQuestion() {
   const [tfSelection, setTfSelection] = useState(null)
 
   return (
-    <div>
+    <div className="tf-question-container">
+      {/* Question Header & Mastery Badge */}
       <div className="studio-meta-bar">
-        <div className="q-points-badge">Question 5 · 5 Points · True or False</div>
+        <div className="q-badge-row">
+          <span className="q-num-pill">Question 5 of 5</span>
+          <span className="q-points-badge">⚖️ 5 Points · True or False</span>
+        </div>
+        <div className="q-meta-feedback">
+          <Trophy size={14} /> Instant Mastery Feedback
+        </div>
       </div>
 
-      <div className="q-prompt">
-        Safe Exam Browser (SEB) operates merely as a standard browser extension and requires no local software installation.
+      {/* Question Prompt */}
+      <h3 className="q-prompt">
+        &ldquo;Safe Exam Browser (SEB) operates merely as a lightweight browser extension and requires zero local OS software installation.&rdquo;
+      </h3>
+      <p className="q-sub-prompt">
+        Choose whether this statement is True or False.
+      </p>
+
+      {/* Two tactile Wayground-style binary cards */}
+      <div className="tf-cards-row">
+        {/* True Option Card */}
+        <div
+          className={`tf-card card-true ${tfSelection === 'true' ? 'selected' : ''}`}
+          onClick={() => setTfSelection('true')}
+          role="button"
+          tabIndex={0}
+        >
+          <div className="tf-card-symbol">▲</div>
+          <div className="tf-card-label">True</div>
+          <div className="tf-card-desc">It is just a browser extension</div>
+        </div>
+
+        {/* False Option Card */}
+        <div
+          className={`tf-card card-false ${tfSelection === 'false' ? 'selected' : ''}`}
+          onClick={() => setTfSelection('false')}
+          role="button"
+          tabIndex={0}
+        >
+          <div className="tf-card-symbol">◆</div>
+          <div className="tf-card-label">False</div>
+          <div className="tf-card-desc">It is a dedicated OS kiosk desktop app</div>
+        </div>
       </div>
 
-      <div className="options-list">
-        {[
-          { val: 'true', label: 'True' },
-          { val: 'false', label: 'False (Correct: SEB is a dedicated kiosk desktop software)' }
-        ].map((opt) => (
-          <div
-            key={opt.val}
-            className={`option-item ${tfSelection === opt.val ? 'selected' : ''}`}
-            onClick={() => setTfSelection(opt.val)}
-          >
-            <div className="option-marker">
-              {tfSelection === opt.val ? '✓' : ''}
-            </div>
-            <div>{opt.label}</div>
-          </div>
-        ))}
-      </div>
-
+      {/* Educational Mastery Feedback Banner */}
       {tfSelection && (
-        <div style={{ marginTop: '14px', fontSize: '14px' }}>
+        <div className={`tf-feedback-banner ${tfSelection === 'false' ? 'correct' : 'incorrect'}`}>
           {tfSelection === 'false' ? (
-            <span style={{ color: 'var(--support)', fontWeight: 600 }}>
-              ✓ Correct! Safe Exam Browser is an OS-level kiosk software application, not a browser plugin.
-            </span>
+            <div className="feedback-content">
+              <CheckCircle2 size={18} />
+              <div>
+                <strong>Spot on! (+5 Points)</strong> Safe Exam Browser is an OS-level application that 
+                locks down secondary monitors, hotkeys, and unauthorized background processes.
+              </div>
+            </div>
           ) : (
-            <span style={{ color: 'var(--accent2)' }}>
-              Review: Web-only extensions cannot control system shortcuts or display kiosk windows.
-            </span>
+            <div className="feedback-content">
+              <span>⚠️</span>
+              <div>
+                <strong>Almost!</strong> Browser extensions cannot enforce OS-level lockdown (like disabling 
+                Alt+Tab or screen recorders). That is why SEB exists as dedicated software.
+              </div>
+            </div>
           )}
         </div>
       )}
