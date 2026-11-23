@@ -1,6 +1,7 @@
 import { useMemo, useRef, useState } from 'react'
 import './App.css'
 
+// Demo records keep the dashboard populated until it is connected to a data service.
 const initialQuestions = [
   { id: 'Q-104', prompt: 'Which process converts sunlight into chemical energy?', options: ['Respiration', 'Photosynthesis', 'Fermentation', 'Transpiration'], correctAnswer: 'Photosynthesis', status: 'Published' },
   { id: 'Q-103', prompt: 'What is the value of x in 3x + 5 = 20?', options: ['3', '5', '7', '15'], correctAnswer: '5', status: 'Published' },
@@ -79,6 +80,7 @@ function App() {
 
   function parseQuestionFile(text) {
     const parsed = JSON.parse(text)
+    // Support both a plain array and an exported object with a questions array.
     const items = Array.isArray(parsed) ? parsed : parsed.questions
     if (!Array.isArray(items) || items.length === 0) {
       throw new Error('The JSON file must contain a non-empty array of questions.')
@@ -152,6 +154,7 @@ function App() {
   }
 
   function markFlagReviewed(flagId) {
+    // Reviewing a signal records the admin's review; it does not establish misconduct.
     setFlags((current) => current.map((flag) => flag.id === flagId ? { ...flag, level: 'Reviewed' } : flag))
   }
 
