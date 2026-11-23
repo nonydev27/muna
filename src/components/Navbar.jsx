@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react'
-import { ShieldCheck, Menu, X } from '../icons'
+import { Menu, X } from '../icons'
+//importing the muna logo the nav bar
+import munaLogo from '../assets/muna-mark.svg'
 
 export default function Navbar({ onOpenModal }) {
   const [menuOpen, setMenuOpen] = useState(false)
@@ -20,7 +22,7 @@ export default function Navbar({ onOpenModal }) {
       <div className="content-wrap nav-content">
         <div className="brand-group">
           <div className="brand-icon-box">
-            <ShieldCheck size={22} />
+            <img src={munaLogo} alt="Muna logo" /> 
           </div>
           <div>
             <div className="brand-title">MUNA</div>
