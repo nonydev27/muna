@@ -61,7 +61,7 @@
 .hero {
   position: relative;
   min-height: calc(100vh - 5rem);
-  padding: 0 clamp(1.25rem, 5vw, 4rem) 5rem;
+  padding: 0;
   display: flex;
   align-items: center;
 }
@@ -69,13 +69,13 @@
 .contours:nth-of-type(1) { width: min(46vw, 640px); right: 28%; top: 6%; opacity: 0.95; }
 .contours:nth-of-type(2) { width: min(42vw, 600px); right: -6%; bottom: -18%; opacity: 0.85; transform: rotate(35deg); }
 
-.hero-text { position: relative; z-index: 2; max-width: 38rem; }
+.hero-text { position: relative; z-index: 2; max-width: 44rem; }
 .hero h1 {
-  font-size: clamp(3rem, 8vw, 6.5rem);
-  line-height: 0.98;
+  font-size: clamp(2.5rem, 6vw, 4.5rem);
+  line-height: 1.05;
   letter-spacing: -0.02em;
   font-weight: 700;
-  margin: 0 0 2.5rem;
+  margin: 0 0 1rem;
 }
 
 .search {
@@ -92,7 +92,15 @@
 }
 .search input::placeholder { color: #7d7d90; }
 
-.cta-row { display: flex; flex-wrap: wrap; gap: 1rem; }
+.cta-row {display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1rem; }
+  .cta-row .pill{
+    display: inline-block;
+    width: auto;
+  }
 
 .hero-note {
   position: absolute; z-index: 2;
@@ -123,7 +131,7 @@
   }
   .nav-links.open { display: flex; }
   .hero { align-items: flex-start; padding-top: 3rem; }
-  .contours:nth-of-type(1) { width: 90vw; right: -25%; top: auto; bottom: 22%; opacity: 0.5; }
+  .contours:nth-of-type(1) { width: min(80vh,90vw); height: min(80vh,90 vw); inset: 0; margin: auto; opacity:0.45; }
   .contours:nth-of-type(2) { width: 90vw; right: -30%; bottom: -10%; opacity: 0.55; }
   .hero-note { position: static; width: auto; margin-top: 3rem; max-width: 24rem; }
   .hero { flex-direction: column; }
@@ -135,10 +143,18 @@
   @keyframes drift { to { transform: translateY(-14px) rotate(4deg); } }
 }
 .banner {
-  min-height: 60vh;
+  flex: 1;                   
+  align-self: stretch;        
   display: flex;
   align-items: center;
-  justify-content: center;
+  padding: 0 clamp(1.25rem, 5vw, 4rem) 5rem;   /* the padding moved here */
   color: white;
-  background: #0f172a url("assets/hero.jpg") center / cover no-repeat;
+  background:
+    linear-gradient(rgba(5, 5, 9, 0.6), rgba(5, 5, 9, 0.6)),   /* dark overlay for readable text */
+    url("./assets/bg-image.jpg") center / cover no-repeat;
+}
+.tagline{
+  font-size: clamp(1.1rem, 2vw, 1.5rem);
+  color: var(--muted);
+  margin: 0 0 2rem;
 }

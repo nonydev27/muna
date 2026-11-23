@@ -2,7 +2,7 @@ import { useState } from "react";
 import MunaLogo from "./Muna";
 import "./App.css"
 
-// Change this once your  sign in / sign up route is known
+// Change this once sign in / sign up route is known
 const SIGNUP_PATH = "/signup";
 
 const LINKS = ["About","Contact"];
@@ -82,10 +82,11 @@ export default function Landing() {
         
         <section className="banner">
           <div className="hero-text">
-          <h1>Welcome To Muna<br />Your Mentor Lead Platform</h1>   
+          <h1>Welcome To Muna</h1>
+          <p className="tagline">Your Mentor Lead Platform</p> 
           <div className="cta-row">
-            <a href={SIGNUP_PATH} className="pill pill-blue">Get started</a>
-            <a href="#features" className="pill pill-outline">See how it works</a>
+            <a href={SIGNUP_PATH} className="pill pill-blue">Sign In</a><br/>
+            <a href="#features" className="pill pill-outline">Sign Up</a>
           </div>
         </div>
         </section>
