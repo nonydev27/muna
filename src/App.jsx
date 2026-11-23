@@ -1,7 +1,7 @@
 import { useState } from "react";
-import "./Landing.css";
+import MunaLogo from "./Muna";
 
-// Change this once your teammate's sign in / sign up route is known
+// Change this once your  sign in / sign up route is known
 const SIGNUP_PATH = "/signup";
 
 const LINKS = ["About", "Subjects", "Pricing", "Features", "Contact"];
@@ -38,17 +38,17 @@ function Contours({ id, rings = 16 }) {
   );
 }
 
-function Logo() {
-  return (
-    <a href="/" className="logo" aria-label="ExamPrep home">
-      <svg viewBox="0 0 40 24" width="34" height="20" aria-hidden="true">
-        <path d="M2 2h12a10 10 0 0 1 0 20H2z" fill="none" stroke="currentColor" strokeWidth="3" />
-        <path d="M22 4l14 8-14 8z" fill="currentColor" />
-      </svg>
-      <span>ExamPrep</span>
-    </a>
-  );
-}
+// function Logo() {
+//   return (
+//     <a href="/" className="logo" aria-label="ExamPrep home">
+//       <svg viewBox="0 0 40 24" width="34" height="20" aria-hidden="true">
+//         <path d="M2 2h12a10 10 0 0 1 0 20H2z" fill="none" stroke="currentColor" strokeWidth="3" />
+//         <path d="M22 4l14 8-14 8z" fill="currentColor" />
+//       </svg>
+//       <span>ExamPrep</span>
+//     </a>
+//   );
+// }
 
 export default function Landing() {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -56,7 +56,7 @@ export default function Landing() {
   return (
     <div className="landing">
       <header className="nav">
-        <Logo />
+        <MunaLogo />
         <nav className={`nav-links ${menuOpen ? "open" : ""}`} aria-label="Main">
           {LINKS.map((l) => (
             <a key={l} href={`#${l.toLowerCase()}`}>{l}</a>
