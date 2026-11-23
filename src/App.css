@@ -134,3 +134,11 @@
   .contours:nth-of-type(1) { animation: drift 18s ease-in-out infinite alternate; }
   @keyframes drift { to { transform: translateY(-14px) rotate(4deg); } }
 }
+.banner {
+  min-height: 60vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  background: #0f172a url("assets/hero.jpg") center / cover no-repeat;
+}
