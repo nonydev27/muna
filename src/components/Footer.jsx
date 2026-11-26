@@ -25,6 +25,7 @@ export default function Footer() {
                 <li><a href="#studio">Question Studio</a></li>
                 <li><a href="#security">Security Model</a></li>
                 <li><a href="#workspaces">Workspaces</a></li>
+                <li><a href="#faq">FAQ</a></li>
               </ul>
             </div>
 
@@ -37,6 +38,13 @@ export default function Footer() {
               </ul>
             </div>
           </div>
+        </div>
+
+        <div className="footer-col">
+          <h3 className="footer-col-title">Legal</h3>
+          <ul>
+            <li><a href="/privacy">Privacy Policy</a></li>
+          </ul>
         </div>
 
         <div className="footer-bottom">

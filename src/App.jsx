@@ -4,6 +4,7 @@ import Hero from './components/Hero'
 import QuestionStudio from './components/QuestionStudio/QuestionStudio'
 import SecuritySection from './components/SecuritySection'
 import WorkspacesSection from './components/WorkspacesSection'
+import FaqSection from './components/FaqSection'
 import JoinBanner from './components/JoinBanner'
 import Footer from './components/Footer'
 import ActionModal from './components/ActionModal'
@@ -25,8 +26,10 @@ function useHashRoute() {
 }
 import LoadingScreen from './components/ui/LoadingScreen'
 
+const PrivacyPolicy = lazy(() => import('./pages/PrivacyPolicy.jsx'))
 const Signup = lazy(() => import('./pages/Signup.jsx'))
 const Login = lazy(() => import('./pages/Login.jsx'))
+
 
 export default function App() {
   const [isModalOpen, setIsModalOpen] = useState(false)
@@ -34,6 +37,13 @@ export default function App() {
   const hash = useHashRoute()
   const path = window.location.pathname
 
+  if (path === '/privacy') {
+    return (
+    <Suspense fallback={<LoadingScreen label="Loading privacy policy" />}>
+      <PrivacyPolicy />
+    </Suspense>
+    )
+  }
   if (path === '/signup' || path === '/login') {
     const AuthPage = path === '/signup' ? Signup : Login
     return (
@@ -67,6 +77,7 @@ export default function App() {
         <QuestionStudio />
         <SecuritySection />
         <WorkspacesSection />
+        <FaqSection />
         <JoinBanner />
       </main>
       <Footer />

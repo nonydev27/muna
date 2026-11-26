@@ -71,6 +71,7 @@ export default function Navbar({ onOpenModal }) {
           <a href="#studio" onClick={closeMenu}>Question Studio</a>
           <a href="#security" onClick={closeMenu}>Security Model</a>
           <a href="#workspaces" onClick={closeMenu}>Workspaces</a>
+          <a href="#faq" onClick={closeMenu}>FAQ</a>
           <a href="#/dashboard" onClick={closeMenu}>Dashboard</a>
         </nav>
       </div>
