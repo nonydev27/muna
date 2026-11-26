@@ -1,5 +1,9 @@
 import { useMemo, useRef, useState } from 'react'
 import './App.css'
+import ProfileMenu from './dashboard/ProfileMenu.jsx'
+import NotificationsMenu from './dashboard/NotificationsMenu.jsx'
+
+const demoUser = { name: 'Alex Morgan', role: 'Administrator' }
 
 // Demo records keep the dashboard populated until it is connected to a data service.
 const initialQuestions = [
@@ -56,6 +60,7 @@ function initialsFor(name) {
 
 function App() {
   const [activeView, setActiveView] = useState('Overview')
+  const [loggedOut, setLoggedOut] = useState(false)
   const [questions, setQuestions] = useState(initialQuestions)
   const [answers, setAnswers] = useState(initialAnswers)
   const [flags, setFlags] = useState(initialFlags)
@@ -207,7 +212,7 @@ function App() {
           {uploadError && <p className="inline-message error-message" role="alert">{uploadError}</p>}
           <div className="panel-heading question-list-heading"><div><h2>All questions <span className="muted-count">{questions.length}</span></h2><p>Questions available for your assessments</p></div></div>
           <div className="table-wrap"><table><thead><tr><th>QUESTION</th><th>OPTIONS</th><th>CORRECT ANSWER</th><th>STATUS</th></tr></thead><tbody>
-            {filteredQuestions.map((question) => <tr key={question.id}><td><div className="question-title"><span className="question-id">{question.id}</span><strong>{question.prompt}</strong></div></td><td>{question.options.length} options</td><td>{question.correctAnswer}</td><td><span className="status-pill status-published">{question.status}</span></td></tr>)}
+            {filteredQuestions.map((question) => <tr key={question.id}><td><div className="question-title"><strong>{question.prompt}</strong></div></td><td>{question.options.length} options</td><td>{question.correctAnswer}</td><td><span className="status-pill status-published">{question.status}</span></td></tr>)}
             {filteredQuestions.length === 0 && <tr><td className="empty-row" colSpan="4">No questions match your search.</td></tr>}
           </tbody></table></div>
         </section>
@@ -241,12 +246,39 @@ function App() {
         <section className="panel table-panel">
           <div className="panel-heading"><div><h2>Activity signals</h2><p>Potential concerns that may benefit from a closer look.</p></div></div>
           <div className="table-wrap"><table><thead><tr><th>STUDENT</th><th>ASSESSMENT</th><th>ACTIVITY SIGNAL</th><th>STATUS</th><th></th></tr></thead><tbody>
-            {filteredFlags.map((flag) => <tr key={flag.id}><td><StudentCell name={flag.student} initials={flag.initials} id={flag.id} /></td><td>{flag.assessment}</td><td><div className="signal-copy"><strong>{flag.signal}</strong><small>{flag.detail}</small></div></td><td><span className={`status-pill ${flag.level === 'Review' ? 'status-review' : 'status-reviewed'}`}>{flag.level === 'Review' ? 'Needs review' : 'Reviewed'}</span></td><td>{flag.level === 'Review' && <button className="small-button" onClick={() => markFlagReviewed(flag.id)}>Mark reviewed</button>}</td></tr>)}
+            {filteredFlags.map((flag) => <tr key={flag.id}><td><StudentCell name={flag.student} initials={flag.initials} /></td><td>{flag.assessment}</td><td><div className="signal-copy"><strong>{flag.signal}</strong><small>{flag.detail}</small></div></td><td><span className={`status-pill ${flag.level === 'Review' ? 'status-review' : 'status-reviewed'}`}>{flag.level === 'Review' ? 'Needs review' : 'Reviewed'}</span></td><td>{flag.level === 'Review' && <button className="small-button" onClick={() => markFlagReviewed(flag.id)}>Mark reviewed</button>}</td></tr>)}
             {filteredFlags.length === 0 && <tr><td className="empty-row" colSpan="5">No integrity signals match your search.</td></tr>}
           </tbody></table></div>
         </section>
       </>
     )
+  }
+
+  const notifications = [
+    pendingAnswers > 0 && {
+      id: 'answer-reviews',
+      count: pendingAnswers,
+      title: `${pendingAnswers} ${pendingAnswers === 1 ? 'answer' : 'answers'} to review`,
+      description: 'Student submissions are waiting for your review.',
+      view: 'Answer review',
+      tone: 'amber',
+      icon: <Icon name="file" />,
+    },
+    unresolvedFlags > 0 && {
+      id: 'integrity-flags',
+      count: unresolvedFlags,
+      title: `${unresolvedFlags} integrity ${unresolvedFlags === 1 ? 'flag' : 'flags'} to review`,
+      description: 'Review the context before deciding.',
+      view: 'Integrity flags',
+      tone: 'rose',
+      icon: <Icon name="shield" />,
+    },
+  ].filter(Boolean)
+
+  function openNotification(item) {
+    setActiveView(item.view)
+    setSearch('')
+    if (item.view === 'Answer review') setAnswerFilter('Needs review')
   }
 
   const pageContent = {
@@ -256,6 +288,17 @@ function App() {
     'Integrity flags': renderIntegrityFlags,
   }
 
+  if (loggedOut) {
+    return (
+      <main className="demo-exit">
+        <section className="panel" aria-labelledby="demo-exit-title">
+          <h1 id="demo-exit-title" tabIndex={-1} ref={(node) => node?.focus()}>You've left the demo workspace</h1>
+          <p>This preview uses a demo account. Secure sign-in and session logout are not connected yet.</p>
+          <button className="button button-primary" onClick={() => { setActiveView('Overview'); setSearch(''); setQuestionModalOpen(false); setSelectedAnswer(null); setLoggedOut(false) }}>Return to demo</button>
+        </section>
+      </main>
+    )
+  }
   return (
     <div className="app-shell">
       <aside className="sidebar">
@@ -264,15 +307,15 @@ function App() {
         <nav className="main-nav" aria-label="Main navigation">
           {navigation.map((item) => <button key={item.label} className={`nav-item ${activeView === item.label ? 'nav-active' : ''}`} onClick={() => { setActiveView(item.label); setSearch('') }}><Icon name={item.icon} size={18} /><span>{item.label}</span>{item.label === 'Answer review' && pendingAnswers > 0 && <span className="nav-badge">{pendingAnswers}</span>}{item.label === 'Integrity flags' && unresolvedFlags > 0 && <span className="nav-badge nav-badge-warm">{unresolvedFlags}</span>}</button>)}
         </nav>
-        <div className="sidebar-bottom"><div className="help-card"><span className="help-spark">✦</span><strong>Need a hand?</strong><p>Visit the help center for tips and guides.</p><button onClick={() => setUploadMessage('Help center is not connected in this preview.')}>Open help center <span>→</span></button></div><div className="profile"><span className="profile-avatar">AS</span><span className="profile-text"><strong>Alex Morgan</strong><small>Administrator</small></span><span className="profile-menu">···</span></div></div>
+        <div className="sidebar-bottom"><div className="help-card"><span className="help-spark">✦</span><strong>Need a hand?</strong><p>Visit the help center for tips and guides.</p><button onClick={() => setUploadMessage('Help center is not connected in this preview.')}>Open help center <span>→</span></button></div><ProfileMenu user={demoUser} onLogout={() => setLoggedOut(true)} /></div>
       </aside>
       <main className="main-area">
-        <header className="topbar"><div className="breadcrumb">Workspace <span>/</span> <strong>{activeView}</strong></div><div className="topbar-actions"><label className="search-box"><Icon name="search" size={17} /><input type="search" placeholder="Search anything..." value={search} onChange={(event) => setSearch(event.target.value)} aria-label="Search current view" /><kbd>⌘ K</kbd></label><button className="icon-button notification-button" aria-label="Notifications"><Icon name="bell" size={19} /><span /></button><span className="top-avatar">AM</span></div></header>
+        <header className="topbar"><div className="breadcrumb">Workspace <span>/</span> <strong>{activeView}</strong></div><div className="topbar-actions"><label className="search-box"><Icon name="search" size={17} /><input type="search" placeholder="Search anything..." value={search} onChange={(event) => setSearch(event.target.value)} aria-label="Search current view" /><kbd>⌘ K</kbd></label><NotificationsMenu items={notifications} onSelect={openNotification}><Icon name="bell" size={19} /></NotificationsMenu><ProfileMenu user={demoUser} compact onLogout={() => setLoggedOut(true)} /></div></header>
         <div className="content-area">{pageContent[activeView]()}</div>
         <footer className="footer"><span>© 2026 Muna learning</span><span>Admin workspace <i /> All systems operational</span></footer>
       </main>
       {questionModalOpen && <div className="modal-backdrop" role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget) setQuestionModalOpen(false) }}><section className="modal-card" role="dialog" aria-modal="true" aria-labelledby="question-modal-title"><div className="modal-heading"><div><p className="eyebrow">QUESTION BANK</p><h2 id="question-modal-title">Add a question</h2></div><button className="icon-button" onClick={() => setQuestionModalOpen(false)} aria-label="Close"><Icon name="close" /></button></div><form onSubmit={addQuestion}><label className="form-label">Question<textarea required rows="3" value={newQuestion.prompt} onChange={(event) => setNewQuestion({ ...newQuestion, prompt: event.target.value })} placeholder="Write your question..." /></label><div className="option-grid">{newQuestion.options.map((option, index) => <label className="form-label" key={index}>Option {String.fromCharCode(65 + index)}<input required value={option} onChange={(event) => setNewQuestion({ ...newQuestion, options: newQuestion.options.map((value, optionIndex) => optionIndex === index ? event.target.value : value) })} placeholder={`Enter option ${String.fromCharCode(65 + index)}`} /></label>)}</div><label className="form-label">Correct answer<select required value={newQuestion.correctAnswer} onChange={(event) => setNewQuestion({ ...newQuestion, correctAnswer: event.target.value })}><option value="" disabled>Select the correct option</option>{newQuestion.options.map((option, index) => <option key={index} value={option || ''} disabled={!option.trim()}>{String.fromCharCode(65 + index)} — {option || 'Enter an option first'}</option>)}</select></label><div className="modal-actions"><button type="button" className="button button-secondary" onClick={() => setQuestionModalOpen(false)}>Cancel</button><button type="submit" className="button button-primary">Add to question bank</button></div></form></section></div>}
-      {selectedAnswer && <div className="modal-backdrop" role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget) setSelectedAnswer(null) }}><section className="modal-card answer-modal" role="dialog" aria-modal="true" aria-labelledby="answer-modal-title"><div className="modal-heading"><div><p className="eyebrow">SUBMISSION {selectedAnswer.id}</p><h2 id="answer-modal-title">Review answer</h2></div><button className="icon-button" onClick={() => setSelectedAnswer(null)} aria-label="Close"><Icon name="close" /></button></div><StudentCell name={selectedAnswer.student} initials={selectedAnswer.initials} id={selectedAnswer.submitted} /><div className="answer-detail"><span>ASSESSMENT</span><strong>{selectedAnswer.question}</strong></div><div className="answer-detail"><span>STUDENT&apos;S ANSWER</span><p>{selectedAnswer.answer}</p></div><div className="answer-detail answer-score"><span>SCORE</span><strong>{selectedAnswer.score}</strong></div><div className="modal-actions"><button className="button button-secondary" onClick={() => setSelectedAnswer(null)}>Close</button>{selectedAnswer.status === 'Needs review' && <button className="button button-primary" onClick={() => markAnswerReviewed(selectedAnswer.id)}><Icon name="check" size={16} /> Mark as reviewed</button>}</div></section></div>}
+      {selectedAnswer && <div className="modal-backdrop" role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget) setSelectedAnswer(null) }}><section className="modal-card answer-modal" role="dialog" aria-modal="true" aria-labelledby="answer-modal-title"><div className="modal-heading"><div><p className="eyebrow">SUBMISSION</p><h2 id="answer-modal-title">Review answer</h2></div><button className="icon-button" onClick={() => setSelectedAnswer(null)} aria-label="Close"><Icon name="close" /></button></div><StudentCell name={selectedAnswer.student} initials={selectedAnswer.initials} subtitle={selectedAnswer.submitted} /><div className="answer-detail"><span>ASSESSMENT</span><strong>{selectedAnswer.question}</strong></div><div className="answer-detail"><span>STUDENT&apos;S ANSWER</span><p>{selectedAnswer.answer}</p></div><div className="answer-detail answer-score"><span>SCORE</span><strong>{selectedAnswer.score}</strong></div><div className="modal-actions"><button className="button button-secondary" onClick={() => setSelectedAnswer(null)}>Close</button>{selectedAnswer.status === 'Needs review' && <button className="button button-primary" onClick={() => markAnswerReviewed(selectedAnswer.id)}><Icon name="check" size={16} /> Mark as reviewed</button>}</div></section></div>}
     </div>
   )
 }
@@ -281,13 +324,13 @@ function StatCard({ label, value, change, icon, tone, caption }) {
   return <section className="panel stat-card"><div className={`stat-icon ${tone}`}><Icon name={icon} size={19} /></div><p className="stat-label">{label}</p><div className="stat-value">{value}</div><div className="stat-foot"><span className={tone === 'blue' ? 'positive-change' : 'stat-description'}>{change}</span>{caption && <span className="stat-description">{caption}</span>}</div><span className="stat-trend"><Icon name="arrow" size={15} /></span></section>
 }
 
-function StudentCell({ name, initials, id }) {
-  return <div className="student-cell"><span className="student-avatar">{initials || initialsFor(name)}</span><span><strong>{name}</strong><small>{id}</small></span></div>
+function StudentCell({ name, initials, subtitle }) {
+  return <div className="student-cell"><span className="student-avatar">{initials || initialsFor(name)}</span><span><strong>{name}</strong>{subtitle && <small>{subtitle}</small>}</span></div>
 }
 
 function AnswerTable({ answers, onSelect }) {
   return <div className="table-wrap"><table><thead><tr><th>STUDENT</th><th>ASSESSMENT</th><th>SUBMITTED</th><th>SCORE</th><th>STATUS</th><th></th></tr></thead><tbody>
-    {answers.map((answer) => <tr key={answer.id}><td><StudentCell name={answer.student} initials={answer.initials} id={answer.id} /></td><td>{answer.question}</td><td>{answer.submitted}</td><td className="score-cell">{answer.score}</td><td><span className={`status-pill ${answer.status === 'Reviewed' ? 'status-reviewed' : 'status-review'}`}>{answer.status}</span></td><td><button className="row-action" aria-label={`Review ${answer.student}'s answer`} onClick={() => onSelect(answer)}>Review <span>→</span></button></td></tr>)}
+    {answers.map((answer) => <tr key={answer.id}><td><StudentCell name={answer.student} initials={answer.initials} /></td><td>{answer.question}</td><td>{answer.submitted}</td><td className="score-cell">{answer.score}</td><td><span className={`status-pill ${answer.status === 'Reviewed' ? 'status-reviewed' : 'status-review'}`}>{answer.status}</span></td><td><button className="row-action" aria-label={`Review ${answer.student}'s answer`} onClick={() => onSelect(answer)}>Review <span>→</span></button></td></tr>)}
     {answers.length === 0 && <tr><td className="empty-row" colSpan="6">No submissions match your filters.</td></tr>}
   </tbody></table></div>
 }
