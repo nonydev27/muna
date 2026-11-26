@@ -1,0 +1,134 @@
+.notifications-menu {
+  position: relative;
+}
+
+.notification-button:hover,
+.notification-button[aria-expanded="true"] {
+  border-color: #dcd8fa;
+  background: #f5f4ff;
+  color: #6058cc;
+}
+
+.notification-button .notification-badge {
+  position: absolute;
+  top: -6px;
+  right: -7px;
+  display: grid;
+  min-width: 18px;
+  height: 18px;
+  place-items: center;
+  padding: 0 4px;
+  border: 2px solid #fff;
+  border-radius: 10px;
+  background: #c95669;
+  color: #fff;
+  font-size: 9px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.notifications-panel {
+  position: absolute;
+  z-index: 10;
+  top: calc(100% + 12px);
+  right: 0;
+  width: 340px;
+  max-width: calc(100vw - 28px);
+  max-height: min(440px, 65dvh);
+  overflow-y: auto;
+  border: 1px solid #e9e7f3;
+  border-radius: 12px;
+  background: #fff;
+  box-shadow: 0 12px 36px #24253a1a;
+  color: #38394d;
+  text-align: left;
+}
+
+.notifications-heading {
+  padding: 16px;
+  border-bottom: 1px solid #eff0f5;
+}
+
+.notifications-heading h2 {
+  margin: 0;
+  font-size: 14px;
+}
+
+.notifications-heading p {
+  margin: 5px 0 0;
+  color: #85889a;
+  font-size: 11px;
+}
+
+.notifications-list {
+  margin: 0;
+  padding: 6px;
+  list-style: none;
+}
+
+.notification-item {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  gap: 11px;
+  padding: 12px 10px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+  font: inherit;
+  text-align: left;
+}
+
+.notification-item:hover {
+  background: #f7f6ff;
+}
+
+.notification-copy {
+  display: grid;
+  flex: 1;
+  gap: 5px;
+}
+
+.notification-copy strong {
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.notification-copy small {
+  color: #85889a;
+  font-size: 11px;
+  line-height: 1.5;
+}
+
+.notification-chevron {
+  color: #989aaa;
+  font-size: 20px;
+}
+
+.notifications-empty {
+  padding: 28px 20px;
+  text-align: center;
+}
+
+.notifications-empty strong {
+  font-size: 13px;
+}
+
+.notifications-empty p {
+  margin: 8px 0 0;
+  color: #85889a;
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+@media (max-width: 560px) {
+  .topbar-actions {
+    margin-left: auto;
+  }
+
+  .notifications-panel {
+    right: -41px;
+  }
+}
